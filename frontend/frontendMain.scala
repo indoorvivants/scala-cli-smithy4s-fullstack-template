@@ -67,7 +67,6 @@ def renderTest(id: TestId, init: Test, signal: Signal[Test]) =
       "Generate new test",
       onClick.mapToStrict(Action.GenerateNewTest) --> actionBus,
       cls := "bg-sky-700 text-lg font-bold p-2 text-white"
-
     )
 
   val app =

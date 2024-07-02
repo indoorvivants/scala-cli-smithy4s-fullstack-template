@@ -12,3 +12,11 @@ setup-ide:
 	cd shared && scala-cli setup-ide .
 	cd frontend && scala-cli setup-ide .
 	cd backend && scala-cli setup-ide .
+
+code-check:
+	cd backend && scala-cli fmt . --check
+	cd frontend && scala-cli fmt . --check
+
+pre-ci:
+	cd backend && scala-cli fmt .
+	cd frontend && scala-cli fmt .
