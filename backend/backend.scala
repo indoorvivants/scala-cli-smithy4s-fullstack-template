@@ -7,6 +7,8 @@ import fullstack_scala.protocol.*
 import org.http4s.HttpApp
 import scribe.Scribe
 import smithy4s.http4s.SimpleRestJsonBuilder
+import cats.effect.std.Random
+import cats.effect.Ref
 
 def handleErrors(logger: Scribe[IO], routes: HttpApp[IO]): HttpApp[IO] =
   import cats.syntax.all.*
@@ -14,28 +16,18 @@ def handleErrors(logger: Scribe[IO], routes: HttpApp[IO]): HttpApp[IO] =
     Kleisli(request => logger.error("Request failed", request.toString, exc))
   }
 
-class TestServiceImpl() extends TestService[IO]:
+class TestServiceImpl(ref: Ref[IO, List[Test]]) extends TestService[IO]:
   override def listTests(): IO[ListTestsOutput] =
-    IO(
-      ListTestsOutput(
-        List(
-          Test(
-            TestId(1),
-            TestAttributes(
-              TestTitle("yass"),
-              description = Some(TestDescription("qween"))
-            )
-          ),
-          Test(
-            TestId(2),
-            TestAttributes(
-              TestTitle("bless"),
-              description = None
-            )
-          )
-        )
-      )
-    )
+    ref.get.map(ListTestsOutput(_))
+
+  override def createTest(attributes: TestAttributes) =
+    Random
+      .scalaUtilRandom[IO]
+      .flatMap(_.nextInt)
+      .map(id => Test(id = TestId(id), attributes = attributes))
+      .flatTap(test => ref.update(_ :+ test))
+      .map(CreateTestOutput(_))
+
 end TestServiceImpl
 
 def routesResource(service: TestService[IO]) =

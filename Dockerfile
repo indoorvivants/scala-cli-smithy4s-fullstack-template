@@ -14,7 +14,6 @@ COPY shared shared
 
 WORKDIR /source/frontend
 COPY frontend/ .
-RUN rm -rf .scala-build .bsp .bloop
 RUN npm install && npm run build
 
 WORKDIR /source/backend

@@ -15,6 +15,7 @@ trait TestServiceGen[F[_, _, _, _, _]] {
   self =>
 
   def listTests(): F[Unit, Nothing, ListTestsOutput, Nothing, Nothing]
+  def createTest(attributes: TestAttributes): F[CreateTestInput, Nothing, CreateTestOutput, Nothing, Nothing]
 
   def transform: Transformation.PartiallyApplied[TestServiceGen[F]] = Transformation.of[TestServiceGen[F]](this)
 }
@@ -37,6 +38,7 @@ object TestServiceGen extends Service.Mixin[TestServiceGen, TestServiceOperation
 
   val endpoints: Vector[smithy4s.Endpoint[TestServiceOperation, ?, ?, ?, ?, ?]] = Vector(
     TestServiceOperation.ListTests,
+    TestServiceOperation.CreateTest,
   )
 
   def input[I, E, O, SI, SO](op: TestServiceOperation[I, E, O, SI, SO]): I = op.input
@@ -62,9 +64,11 @@ object TestServiceOperation {
 
   object reified extends TestServiceGen[TestServiceOperation] {
     def listTests(): ListTests = ListTests()
+    def createTest(attributes: TestAttributes): CreateTest = CreateTest(CreateTestInput(attributes))
   }
   class Transformed[P[_, _, _, _, _], P1[_ ,_ ,_ ,_ ,_]](alg: TestServiceGen[P], f: PolyFunction5[P, P1]) extends TestServiceGen[P1] {
     def listTests(): P1[Unit, Nothing, ListTestsOutput, Nothing, Nothing] = f[Unit, Nothing, ListTestsOutput, Nothing, Nothing](alg.listTests())
+    def createTest(attributes: TestAttributes): P1[CreateTestInput, Nothing, CreateTestOutput, Nothing, Nothing] = f[CreateTestInput, Nothing, CreateTestOutput, Nothing, Nothing](alg.createTest(attributes))
   }
 
   def toPolyFunction[P[_, _, _, _, _]](impl: TestServiceGen[P]): PolyFunction5[TestServiceOperation, P] = new PolyFunction5[TestServiceOperation, P] {
@@ -82,6 +86,18 @@ object TestServiceOperation {
       .withOutput(ListTestsOutput.schema)
       .withHints(smithy.api.Http(method = smithy.api.NonEmptyString("GET"), uri = smithy.api.NonEmptyString("/api/tests"), code = 200), smithy.api.Readonly())
     def wrap(input: Unit): ListTests = ListTests()
+  }
+  final case class CreateTest(input: CreateTestInput) extends TestServiceOperation[CreateTestInput, Nothing, CreateTestOutput, Nothing, Nothing] {
+    def run[F[_, _, _, _, _]](impl: TestServiceGen[F]): F[CreateTestInput, Nothing, CreateTestOutput, Nothing, Nothing] = impl.createTest(input.attributes)
+    def ordinal: Int = 1
+    def endpoint: smithy4s.Endpoint[TestServiceOperation,CreateTestInput, Nothing, CreateTestOutput, Nothing, Nothing] = CreateTest
+  }
+  object CreateTest extends smithy4s.Endpoint[TestServiceOperation,CreateTestInput, Nothing, CreateTestOutput, Nothing, Nothing] {
+    val schema: OperationSchema[CreateTestInput, Nothing, CreateTestOutput, Nothing, Nothing] = Schema.operation(ShapeId("fullstack_scala.protocol", "CreateTest"))
+      .withInput(CreateTestInput.schema)
+      .withOutput(CreateTestOutput.schema)
+      .withHints(smithy.api.Http(method = smithy.api.NonEmptyString("PUT"), uri = smithy.api.NonEmptyString("/api/test"), code = 200), smithy.api.Idempotent())
+    def wrap(input: CreateTestInput): CreateTest = CreateTest(input)
   }
 }
 

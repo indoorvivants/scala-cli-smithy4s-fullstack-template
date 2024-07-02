@@ -7,6 +7,7 @@ import com.comcast.ip4s.host
 import org.http4s.ember.server.EmberServerBuilder
 
 import scala.concurrent.duration.*
+import fullstack_scala.protocol.*
 
 object Server extends IOApp:
 
@@ -18,7 +19,8 @@ object Server extends IOApp:
 
     val server =
       for
-        routes <- routesResource(TestServiceImpl())
+        ref <- IO.ref(DUMMY_DATA).toResource
+        routes <- routesResource(TestServiceImpl(ref))
         server <- EmberServerBuilder
           .default[IO]
           .withPort(port)
@@ -34,4 +36,23 @@ object Server extends IOApp:
       .as(ExitCode.Success)
 
   end run
+
+  val DUMMY_DATA =
+    List(
+      Test(
+        TestId(1),
+        TestAttributes(
+          TestTitle("yass"),
+          description = Some(TestDescription("qween"))
+        )
+      ),
+      Test(
+        TestId(2),
+        TestAttributes(
+          TestTitle("bless"),
+          description = None
+        )
+      )
+    )
+
 end Server
