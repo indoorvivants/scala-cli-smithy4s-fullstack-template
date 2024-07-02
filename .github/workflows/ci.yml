@@ -23,8 +23,9 @@ jobs:
       - name: Check formatting
         run: make code-check || echo "Run `make pre-ci`"
 
-      - name: Check generated code is up to date
-        run: make smithy4s && git diff --exit-code
+      # Smithy4s is not idempotent unfortunately :(
+      # - name: Check generated code is up to date
+      #   run: make smithy4s && git diff --exit-code
 
       - name: Check Docker build 
         run: make docker
