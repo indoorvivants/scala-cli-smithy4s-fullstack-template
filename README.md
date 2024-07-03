@@ -9,13 +9,18 @@
     - [Frontend live server](#frontend-live-server)
     - [Backend live server](#backend-live-server)
     - [Packaging as docker container](#packaging-as-docker-container)
-<!--toc:end-->
+    <!--toc:end-->
 
 **Frontend**: [Scala.js](https://www.scala-js.org/) and [Laminar](https://laminar.dev)
+
 **Backend**: [Scala JVM](https://www.scala-lang.org/) and [Http4s](https://http4s.org/)
+
 **Protocol**: [Smithy4s](https://disneystreaming.github.io/smithy4s/)
+
 **Build system**: [Scala CLI](https://scala-cli.virtuslab.org/) and [Vite](https://vitejs.dev/)
+
 **Packaging**: [Docker](https://hub.docker.com/)
+
 **Web server**: [NGINX](https://nginx.org/)
 
 This is an opinionated fullstack scala template:
