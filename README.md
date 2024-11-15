@@ -34,6 +34,17 @@ Scala CLI doesn't have any support for multi-module projects, so to make sure we
 
 1. Run `make setup-ide` and then cross your fingers that Metals will pick everything up correctly
 
+If you have [mprocs](https://github.com/pvolok/mprocs) enabled, you can just run `mprocs` at
+the root of this project and it will start:
+
+1. Live reload of backend
+2. Live reload of frontend
+3. Live regeneration of smithy files
+
+Note that when Scala CLI runs in watch mode it will not pick up _new_ files that you add - 
+which will be the case with new smithy4s definitions. So if you get compilation errors, just restart 
+the relevant process so it can pick up new files.
+
 ### Updating protocol definitions
 
 1. Make changes to `shared/protocol.smithy`
