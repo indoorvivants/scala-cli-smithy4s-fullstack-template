@@ -1,0 +1,6 @@
+procs:
+  backend:
+    shell: "make run-backend"
+  frontend:
+    shell: "make run-frontend"
+  smithy4s: "make watch-smithy4s"

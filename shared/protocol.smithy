@@ -7,6 +7,7 @@ use alloy#uuidFormat
 
 @simpleRestJson
 service TestService {
+
   version: "1.0.0",
   operations: [ListTests, CreateTest]
 }
@@ -23,7 +24,6 @@ operation ListTests {
 @idempotent
 @http(method: "PUT", uri: "/api/test", code: 200)
 operation CreateTest {
-  
   input := {
     @required
     attributes: TestAttributes

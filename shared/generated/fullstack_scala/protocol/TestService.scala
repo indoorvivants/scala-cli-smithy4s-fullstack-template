@@ -17,7 +17,7 @@ trait TestServiceGen[F[_, _, _, _, _]] {
   def listTests(): F[Unit, Nothing, ListTestsOutput, Nothing, Nothing]
   def createTest(attributes: TestAttributes): F[CreateTestInput, Nothing, CreateTestOutput, Nothing, Nothing]
 
-  def transform: Transformation.PartiallyApplied[TestServiceGen[F]] = Transformation.of[TestServiceGen[F]](this)
+  final def transform: Transformation.PartiallyApplied[TestServiceGen[F]] = Transformation.of[TestServiceGen[F]](this)
 }
 
 object TestServiceGen extends Service.Mixin[TestServiceGen, TestServiceOperation] {
@@ -36,7 +36,7 @@ object TestServiceGen extends Service.Mixin[TestServiceGen, TestServiceOperation
     type Default[F[+_, +_]] = Constant[smithy4s.kinds.stubs.Kind2[F]#toKind5]
   }
 
-  val endpoints: Vector[smithy4s.Endpoint[TestServiceOperation, ?, ?, ?, ?, ?]] = Vector(
+  val endpoints: Vector[smithy4s.Endpoint[TestServiceOperation, _, _, _, _, _]] = Vector(
     TestServiceOperation.ListTests,
     TestServiceOperation.CreateTest,
   )
