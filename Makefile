@@ -1,10 +1,14 @@
 docker:
 	docker build . -t my-fullstack-scala:latest
 
+export WATCHER_SCRIPT
+watch-smithy4s:
+	cd shared && \
+		echo "$$WATCHER_SCRIPT" | scala-cli run _.sc -- watch
+
 smithy4s:
 	cd shared && \
-		rm -rf fullstack_scala/protocol && \
-		cs launch smithy4s --contrib -- generate protocol.smithy --skip resource --skip openapi && \
+		echo "$$WATCHER_SCRIPT" | scala-cli run _.sc -- generate && \
 		scala-cli --power compile . -O -rewrite -O -source -O 3.4-migration
 
 setup-ide:
@@ -27,12 +31,6 @@ run-backend:
 run-frontend:
 	cd frontend && npm install && npm run dev
 
-export WATCHER_SCRIPT
-watch-smithy4s:
-	cd shared && \
-		echo "$$WATCHER_SCRIPT" | scala-cli run _.sc -- watch
-
-		
 
 define WATCHER_SCRIPT
 

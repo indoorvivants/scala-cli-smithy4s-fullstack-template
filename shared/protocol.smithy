@@ -7,7 +7,6 @@ use alloy#uuidFormat
 
 @simpleRestJson
 service TestService {
-
   version: "1.0.0",
   operations: [ListTests, CreateTest]
 }
