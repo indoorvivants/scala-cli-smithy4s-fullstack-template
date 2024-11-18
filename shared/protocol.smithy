@@ -34,8 +34,6 @@ operation CreateTest {
   }
 }
 
-
-
 list Tests {
   member: Test
 }
